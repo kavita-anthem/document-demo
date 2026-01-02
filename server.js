@@ -5,17 +5,13 @@ import connectDB from "./config/db.js";
 import validateRoute from "./routes/validateRoute.js";
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-/**
- * ✅ Test route (health check)
- * Open in browser: http://localhost:PORT/
- */
+/** Health check */
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -23,11 +19,14 @@ app.get("/", (req, res) => {
   });
 });
 
-/**
- * API routes
- */
+/** API routes */
 app.use("/api", validateRoute);
 
-app.listen(process.env.PORT, () =>
-  console.log(`Server running on port ${process.env.PORT}`)
-);
+/** Connect DB (safe for serverless) */
+connectDB();
+
+/**
+ * ❌ REMOVE app.listen()
+ * ✅ EXPORT app
+ */
+export default app;
